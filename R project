@@ -20,3 +20,40 @@ make_cache <- function(f) {
 ##This function, make_cache, takes another function f as an argument and returns a new function that performs caching for f.
 #This implementation uses a simple cache based on a named list, where the arguments are concatenated to form a unique key for each cached result
 #It assumes that the arguments are suitable for creating a unique key.
+makeCacheMatrix <- function(x) {
+  inv <- NULL
+  
+  set <- function(y) {
+    x <<- y
+    inv <<- NULL  # Clear the cached inverse
+  }
+  
+  get <- function() {
+    x
+  }
+  
+  setInverse <- function(inverse) {
+    inv <<- inverse
+  }
+  
+  getInverse <- function() {
+    inv
+  }
+  
+  list(set = set, get = get, setInverse = setInverse, getInverse = getInverse)
+}
+
+cacheSolve <- function(x) {
+  inv <- x$getInverse()
+  
+  if (!is.null(inv)) {
+    message("Fetching inverse from cache...")
+    return(inv)
+  }
+  
+  matrix <- x$get()
+  inv <- solve(matrix)
+  x$setInverse(inv)
+  
+  inv
+}
