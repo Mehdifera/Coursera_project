@@ -1,0 +1,22 @@
+make_cache <- function(f) {
+  cache <- NULL
+  
+  function(...) {
+    args <- list(...)
+    key <- paste0(args, collapse = "_")
+    
+    if (!is.null(cache) && key %in% names(cache)) {
+      message("Fetching result from cache...")
+      return(cache[[key]])
+    }
+    
+    message("Performing computation...")
+    result <- f(...)
+    cache[[key]] <- result
+    
+    return(result)
+  }
+}
+##This function, make_cache, takes another function f as an argument and returns a new function that performs caching for f.
+#This implementation uses a simple cache based on a named list, where the arguments are concatenated to form a unique key for each cached result
+#It assumes that the arguments are suitable for creating a unique key.
